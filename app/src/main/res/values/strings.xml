@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">LearnAndroidService</string>
+  <string name="activity_main_button_on">ON</string>
+  <string name="activity_main_button_off">OFF</string>
+</resources>

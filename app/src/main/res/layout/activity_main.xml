@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+  <data>
+
+    <variable
+      name="isStateActive"
+      type="android.databinding.ObservableBoolean" />
+
+    <variable
+      name="viewModel"
+      type="link.k3n.learnandroidservice.MainViewModel" />
+
+  </data>
+
+  <android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="link.k3n.learnandroidservice.MainActivity">
+
+    <Button
+      android:id="@+id/activity_main_button_on"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/activity_main_button_on"
+      android:enabled="@{isStateActive ? false : true}"
+      android:onClick="@{() -> viewModel.startService()}"
+      app:layout_constraintBottom_toTopOf="@+id/activity_main_button_off"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+      android:id="@+id/activity_main_button_off"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/activity_main_button_off"
+      android:enabled="@{isStateActive ? true : false}"
+      android:onClick="@{() -> viewModel.stopService()}"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/activity_main_button_on"/>
+  </android.support.constraint.ConstraintLayout>
+</layout>

@@ -1,5 +1,7 @@
 package link.k3n.learnandroidservice
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -45,6 +47,16 @@ class CounterService : Service() {
                 count++
             }
         }, 0, 1000)
+
+        val activityIntent: Intent = Intent(this, MainActivity::class.java)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
+        val notification: Notification = Notification.Builder(this)
+                .setContentTitle("CounterService")
+                .setContentText("Working...")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build()
+        startForeground(startId, notification)
 
         return super.onStartCommand(intent, flags, startId)
     }

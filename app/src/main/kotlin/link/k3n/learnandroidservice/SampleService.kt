@@ -21,12 +21,13 @@ class SampleService : Service() {
     private lateinit var mHandlerThread: HandlerThread
     private lateinit var mHandler: Handler
     private val mBinder: IBinder = LocalBinder()
+    private var startId: Int = -1
 
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "onCreate")
 
-        mHandlerThread = HandlerThread("CounserService")
+        mHandlerThread = HandlerThread("SampleService")
         mHandlerThread.start()
 
         mHandler = Handler(mHandlerThread.looper)
@@ -52,34 +53,8 @@ class SampleService : Service() {
         return value
     }
 
-    /**
-     * Call this method when use startService() to start this service.
-     */
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "onStartCommand")
-
-        //region run as foreground
-        val activityIntent: Intent = Intent(this, MainActivity::class.java)
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
-        val notification: Notification = Notification.Builder(this)
-                .setContentTitle("SampleService")
-                .setContentText("Working...")
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .build()
-        startForeground(startId, notification)
-        //endregion
-
-        val position:Int
-        if (intent?.extras?.getInt("value") != null) {
-            position = intent.extras.getInt("value")
-            Log.d(TAG, "position:$position")
-        }
-        else {
-            Log.e(TAG, "Couldn't receive value")
-            position = 10
-        }
-
+    fun runFib(position:Int) {
+        Log.i(TAG, "runFib")
         postRunnable(Runnable {
             val result = fib(position)
 
@@ -91,6 +66,7 @@ class SampleService : Service() {
 
             // Start activity when tapped notification
             val resultIntent = Intent(this, MainActivity::class.java)
+            resultIntent.putExtra("result", result)
             val stackBuilder = TaskStackBuilder.create(this)
             stackBuilder.addParentStack(MainActivity::class.java)
             stackBuilder.addNextIntent(resultIntent)
@@ -103,8 +79,24 @@ class SampleService : Service() {
 
             MyBroadcastReceiver.sendBroadcast(this, result)
         })
+    }
+
+    /**
+     * Call this method when use startService() to start this service.
+     */
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(TAG, "onStartCommand")
+
+        this.startId = startId
 
         return START_NOT_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        Log.i(TAG, "onTaskRemoved")
+
+        stopSelf()
     }
 
     override fun onDestroy() {
@@ -125,5 +117,28 @@ class SampleService : Service() {
     override fun onBind(intent: Intent?): IBinder {
         Log.i(TAG, "onBind")
         return mBinder
+    }
+
+    fun startForeground() {
+        Log.i(TAG, "startForeground")
+        if (startId == -1) {
+            Log.e(TAG, "startId is -1")
+            return
+        }
+
+        val activityIntent: Intent = Intent(this, MainActivity::class.java)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
+        val notification: Notification = Notification.Builder(this)
+                .setContentTitle("SampleService")
+                .setContentText("Working...")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build()
+        super.startForeground(startId, notification)
+    }
+
+    fun stopForeground() {
+        Log.i(TAG, "stopForeground")
+        super.stopForeground(true)
     }
 }

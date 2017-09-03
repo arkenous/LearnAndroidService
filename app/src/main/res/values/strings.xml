@@ -1,5 +1,6 @@
 <resources>
   <string name="app_name">LearnAndroidService</string>
-  <string name="activity_main_button_on">ON</string>
-  <string name="activity_main_button_off">OFF</string>
+  <string name="activity_main_button_fg_on">Foreground Service ON</string>
+  <string name="activity_main_button_fg_off">Foreground Service OFF</string>
+  <string name="activity_main_button_run">Run</string>
 </resources>

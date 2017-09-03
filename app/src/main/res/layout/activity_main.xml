@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
   <data>
 
     <variable
-      name="isStateActive"
+      name="isStateForeground"
       type="android.databinding.ObservableBoolean" />
 
     <variable
@@ -14,34 +16,44 @@
   </data>
 
   <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="link.k3n.learnandroidservice.MainActivity">
 
     <Button
-      android:id="@+id/activity_main_button_on"
+      android:id="@+id/activity_main_button_fg_on"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/activity_main_button_on"
-      android:onClick="@{() -> viewModel.startService()}"
-      app:layout_constraintBottom_toTopOf="@+id/activity_main_button_off"
+      android:text="@string/activity_main_button_fg_on"
+      android:enabled="@{isStateForeground ? false : true}"
+      android:onClick="@{() -> viewModel.startServiceForeground()}"
+      app:layout_constraintBottom_toTopOf="@+id/activity_main_button_fg_off"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-      android:id="@+id/activity_main_button_off"
+      android:id="@+id/activity_main_button_fg_off"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/activity_main_button_off"
-      android:enabled="@{isStateActive ? true : false}"
-      android:onClick="@{() -> viewModel.stopService()}"
+      android:text="@string/activity_main_button_fg_off"
+      android:enabled="@{isStateForeground ? true : false}"
+      android:onClick="@{() -> viewModel.stopServiceForeground()}"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/activity_main_button_fg_on"
+      app:layout_constraintBottom_toBottomOf="@+id/activity_main_button_run"
+      android:layout_marginBottom="8dp"/>
+
+    <Button
+      android:id="@+id/activity_main_button_run"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/activity_main_button_run"
+      android:onClick="@{() -> viewModel.runFib()}"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/activity_main_button_on"/>
+      app:layout_constraintTop_toBottomOf="@id/activity_main_button_fg_off"/>
   </android.support.constraint.ConstraintLayout>
 </layout>

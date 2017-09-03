@@ -5,17 +5,22 @@ import android.databinding.ObservableBoolean
 class MainViewModel(val isStateActive: ObservableBoolean, val onServiceStateChanged: OnServiceStateChanged) {
 
     interface OnServiceStateChanged {
-        fun startService()
-        fun stopService()
+        fun startServiceForeground()
+        fun stopServiceForeground()
+        fun runFib()
     }
 
-    fun startService() {
+    fun startServiceForeground() {
         isStateActive.set(true)
-        onServiceStateChanged.startService()
+        onServiceStateChanged.startServiceForeground()
     }
 
-    fun stopService() {
+    fun stopServiceForeground() {
         isStateActive.set(false)
-        onServiceStateChanged.stopService()
+        onServiceStateChanged.stopServiceForeground()
+    }
+
+    fun runFib() {
+        onServiceStateChanged.runFib()
     }
 }
